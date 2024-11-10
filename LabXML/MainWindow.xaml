@@ -1,0 +1,150 @@
+﻿<Window
+    Height="450"
+    Title="MainWindow"
+    Width="800"
+    mc:Ignorable="d"
+    x:Class="LabXML.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:controls="clr-namespace:LabXML.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Microsoft.Xaml.Behaviors;assembly=Microsoft.Xaml.Behaviors"
+    xmlns:local="clr-namespace:LabXML"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Window.DataContext>
+        <local:MainViewModel />
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel>
+        <ScrollViewer
+            DockPanel.Dock="Left"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
+            <Border Padding="5">
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <controls:FiltersEnumConverter x:Key="FiltersConverter" />
+                        <controls:XMLStrategiesEnumConverter x:Key="XMLStrategiesConverter" />
+                    </StackPanel.Resources>
+                    <Button Command="{Binding SaveHtmlCommand}">Save HTML</Button>
+                    <Separator />
+                    <Label>Strategy:</Label>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <RadioButton Grid.Column="0" IsChecked="{Binding CurrentStrategyType, Converter={StaticResource XMLStrategiesConverter}, ConverterParameter={x:Static local:XMLStrategies.DOM}}">DOM</RadioButton>
+                        <RadioButton Grid.Column="2" IsChecked="{Binding CurrentStrategyType, Converter={StaticResource XMLStrategiesConverter}, ConverterParameter={x:Static local:XMLStrategies.SAX}}">SAX</RadioButton>
+                        <RadioButton Grid.Column="4" IsChecked="{Binding CurrentStrategyType, Converter={StaticResource XMLStrategiesConverter}, ConverterParameter={x:Static local:XMLStrategies.LINQ}}">LINQ</RadioButton>
+                    </Grid>
+                    <Separator />
+
+                    <Button Command="{Binding FilterCommand}">Filter</Button>
+                    <Label>Filters:</Label>
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.None}}">None</RadioButton>
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.InvoiceId}}">Invoice Id</RadioButton>
+                    <TextBox Text="{Binding InvoiceId}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.MarketBranch}}">Market Branch</RadioButton>
+                    <ComboBox ItemsSource="{Binding BranchOptions}" SelectedItem="{Binding MarketBranch}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.City}}">City</RadioButton>
+                    <TextBox Text="{Binding City}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.CustomerType}}">Customer Type</RadioButton>
+                    <ComboBox ItemsSource="{Binding CustomerTypeOptions}" SelectedItem="{Binding CustomerType}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.Gender}}">Gender</RadioButton>
+                    <ComboBox ItemsSource="{Binding GenderOptions}" SelectedItem="{Binding Gender}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.ProductLine}}">Product Line</RadioButton>
+                    <TextBox Text="{Binding ProductLine}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.ProductUnitPrice}}">Product Unit Price</RadioButton>
+                    <controls:NumericalRangeControl Max="{Binding DataContext.ProductUnitPriceMax, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Min="{Binding DataContext.ProductUnitPriceMin, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.ProductQuantity}}">Product Quantity</RadioButton>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+                        <Label>Min:</Label>
+                        <TextBox
+                            Grid.Column="1"
+                            Text="{Binding ProductQuantityMin}"
+                            VerticalAlignment="Center" />
+                        <Label Grid.Column="2">Max:</Label>
+                        <TextBox
+                            Grid.Column="3"
+                            Text="{Binding ProductQuantityMax}"
+                            VerticalAlignment="Center" />
+                    </Grid>
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.ProductCost}}">Product Cost Without Tax</RadioButton>
+                    <controls:NumericalRangeControl Max="{Binding DataContext.ProductCostWithoutTaxMax, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Min="{Binding DataContext.ProductCostWithoutTaxMin, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.ProductTax}}">Product Tax</RadioButton>
+                    <controls:NumericalRangeControl Max="{Binding DataContext.ProductTaxMax, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Min="{Binding DataContext.ProductTaxMin, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.ProductTotal}}">Product Total</RadioButton>
+                    <controls:NumericalRangeControl Max="{Binding DataContext.ProductTotalMax, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Min="{Binding DataContext.ProductTotalMin, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.Date}}">Product Date</RadioButton>
+                    <StackPanel>
+                        <Label>Min Date</Label>
+                        <DatePicker SelectedDate="{Binding DateTimeMin}" />
+                        <Label>Max Date</Label>
+                        <DatePicker SelectedDate="{Binding DateTimeMax}" />
+                    </StackPanel>
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.Payment}}">Payment</RadioButton>
+                    <ComboBox ItemsSource="{Binding PaymentOptions}" SelectedItem="{Binding Payment}" />
+                    <Separator />
+
+                    <RadioButton IsChecked="{Binding CurrentFilter, Converter={StaticResource FiltersConverter}, ConverterParameter={x:Static local:Filters.Rating}}">Rating</RadioButton>
+                    <controls:NumericalRangeControl Max="{Binding DataContext.RatingMax, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Min="{Binding DataContext.RatingMin, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+
+                    <Separator />
+
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+        <StackPanel DockPanel.Dock="Top">
+            <Label Content="{Binding SalesNumber}" />
+        </StackPanel>
+        <DataGrid
+            AutoGenerateColumns="True"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            ItemsSource="{Binding Sales}">
+            <!-- <DataGrid.Columns> -->
+            <!--     <DataGridTextColumn Binding="{Binding InvoiceId}" Header="Invoice Id" /> -->
+            <!-- </DataGrid.Columns> -->
+        </DataGrid>
+    </DockPanel>
+</Window>
